@@ -75,13 +75,13 @@ def calcul_rates(y_true, y_pred):
   y_true and y_pred are int arrays 
   '''
   conf_mat = metrics.confusion_matrix(y_true, y_pred, labels = range(len(np.unique(y_true))))
-  FP = np.sum(conf_mat[1:,0])
-  TN = np.sum(conf_mat[1:,1:])
-  FN = np.sum(conf_mat[0, 1:])
-  TP = conf_mat[0,0]
+  FN = np.sum(conf_mat[1:,0])
+  TP = np.sum(conf_mat[1:,1:])
+  FP = np.sum(conf_mat[0, 1:])
+  TN = conf_mat[0,0]
 
-  FPR = FP/(FP+TN) # Sur toutes les attaques combien sont catégorisées comme normales
-  FNR = FN/(FN+TP) # Sur tous les normaux combien sont catégorisés comme attaques
+  FPR = FP/(FP+TN)
+  FNR = FN/(FN+TP)
 
   return(FPR, FNR)
 
