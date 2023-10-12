@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.metrics import f1_score
 import torch.nn as nn
 import wandb
+import time
 
 from art.estimators.classification import PyTorchClassifier
 from art.attacks.evasion import FastGradientMethod, BasicIterativeMethod
@@ -104,8 +105,8 @@ if __name__=='__main__':
                     "agent":i,
                     "binary":binary}
         )
-        
-        print('Started training of agent {} / {}'.format(i+1, nb_agents))
+        start_time = time.time()
+        print('[{:4.0f}m] Started training of agent {} / {}'.format((time.time()-start_time)/60, i+1, nb_agents))
 
        # Creation of the agent
 
@@ -122,9 +123,9 @@ if __name__=='__main__':
                    model=model, device=device, seed=seed)
 
         # Training
-        print('Training started...')
+        print('[{:4.0f}m] Training started...'.format((time.time()-start_time)/60))
         agent.learn(testing_env, n_envs=nb_proc, save_dir=output_dir, num_epoch=epochs)
-        print('Training done.')
+        print('[{:4.0f}m] Training done.'.format((time.time()-start_time)/60))
 
         ####----Adversarial Attack----####
 
@@ -133,8 +134,8 @@ if __name__=='__main__':
                                        input_shape=test_set.shape[1], nb_classes=nb_class)
 
         for epsilon in epsilon_range:
-            print("Epsilon = {}".format(epsilon))
-            print("FGSM Attack...")
+            print("[{:4.0f}m] Epsilon = {}".format((time.time()-start_time)/60, epsilon))
+            print("[{:4.0f}m] FGSM Attack...".format((time.time()-start_time)/60))
             fgm = FastGradientMethod(classifier,
                                          norm=np.inf,
                                          eps=epsilon,
@@ -158,7 +159,7 @@ if __name__=='__main__':
                     "epsilon":epsilon            
                     })
             
-            print("BIM Attack...")
+            print("[{:4.0f}m] BIM Attack...".format((time.time()-start_time)/60))
             bim = BasicIterativeMethod(classifier, 
                                            eps=epsilon, 
                                            eps_step=epsilon/100,
@@ -192,7 +193,7 @@ if __name__=='__main__':
         del classifier
         #del vectorized_training_env
 
-        print('Attack done.')
+        print("[{:4.0f}m] Attack done.".format((time.time()-start_time)/60))
         wandb.finish()
 
     # Saving model and evaluation metrics
