@@ -131,7 +131,7 @@ class Agent(nn.Module):
         Returns nn.Module instance computing the action probabilities
         '''
         if self.model_name=='DQN':
-            pytorch_model = nn.Sequential(self.model.q_net, nn.Softmax())
+            pytorch_model = nn.Sequential(self.model.q_net, nn.Softmax(dim=1))
         elif self.model_name=='PPO':
             pytorch_model = PPO_Model(self.model.policy.mlp_extractor, self.model.policy.action_net)
         else:
