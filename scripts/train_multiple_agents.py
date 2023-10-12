@@ -161,7 +161,7 @@ if __name__=='__main__':
             print("BIM Attack...")
             bim = BasicIterativeMethod(classifier, 
                                            eps=epsilon, 
-                                           eps_step=0.0005,
+                                           eps_step=epsilon/100,
                                            max_iter=100, 
                                            targeted=True, 
                                            batch_size=128)
