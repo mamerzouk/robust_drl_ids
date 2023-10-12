@@ -3,7 +3,7 @@
 #########################################################
 from typing import Tuple
 
-import gym
+import gymnasium as gym
 import pandas as pd
 import numpy as np
 
