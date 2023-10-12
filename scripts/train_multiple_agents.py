@@ -161,10 +161,12 @@ if __name__=='__main__':
                     })
             
             print("[{:4.0f}m] BIM Attack...".format((time.time()-start_time)/60))
+            max_iter = 100
+            eps_step = max(epsilon/max_iter, 0.0001)
             bim = BasicIterativeMethod(classifier, 
                                            eps=epsilon, 
-                                           eps_step=epsilon/100,
-                                           max_iter=100, 
+                                           eps_step=eps_step,
+                                           max_iter=max_iter, 
                                            targeted=True, 
                                            batch_size=128)
             
