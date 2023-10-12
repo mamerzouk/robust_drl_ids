@@ -46,10 +46,10 @@ class CustomWandbCallback(EventCallback):
             f1 = f1_score(self.train_labels, train_actions) if self.binary else f1_score(self.train_labels, train_actions, average='weighted')
 
             wandb.log({
-                'training_metrics':{
+                'training':{
                     "FPR":fpr,
                     "FNR":fnr,
-                    "F1 score":f1
+                    "F1":f1
                     },
                 'epoch':self.n_calls // self.eval_freq,
                 })
@@ -61,10 +61,10 @@ class CustomWandbCallback(EventCallback):
             f1 = f1_score(self.test_labels, test_actions) if self.binary else f1_score(self.test_labels, test_actions, average='weighted')
 
             wandb.log({
-                'testing_metrics':{
+                'testing':{
                     "FPR":fpr,
                     "FNR":fnr,
-                    "F1 score":f1
+                    "F1":f1
                     },
                 'epoch':self.n_calls // self.eval_freq,
                 })

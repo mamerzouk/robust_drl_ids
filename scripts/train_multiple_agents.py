@@ -92,23 +92,18 @@ if __name__=='__main__':
     for i in range(nb_agents):
         ####----W&B----####
         wandb.init(
-            project="evading_drl_ids", # do not change
+            project="robust_drl_ids", # do not change
             tags = [dataset, model],
             name=name, # name of the run
             job_type='train', 
             config={"dataset": dataset, # more information about the run (useful for grouping/filtering)
                     "model": model,
-                    "nb_hidden_layers":hidden_layers,
-                    "nb_units":nb_units,
+                    "hidden_layers":hidden_layers,
+                    "units":nb_units,
                     "epochs": epochs,
                     "agent":i,
                     "binary":binary}
         )
-
-        wandb.define_metric(
-            name='training_metrics',
-            step_metric='epoch'
-            )
         
         print('Started training of agent {} / {}'.format(i+1, nb_agents))
 
@@ -155,10 +150,10 @@ if __name__=='__main__':
             else:
                 f1 = f1_score(test_labels, adversarial_actions, average='weighted')
             
-            wandb.log({'FGSM_metric':{
+            wandb.log({'FGSM':{
                     "FPR":fpr,
                     "FNR":fnr,
-                    "F1 score":f1
+                    "F1":f1
                     },        
                     "epsilon":epsilon            
                     })
@@ -179,10 +174,10 @@ if __name__=='__main__':
             else:
                 f1 = f1_score(test_labels, adversarial_actions, average='weighted')
 
-            wandb.log({'BIM_metric':{
+            wandb.log({'BIM':{
                             "FPR":fpr,
                             "FNR":fnr,
-                            "F1 score":f1
+                            "F1":f1
                             },        
                         "epsilon":epsilon            
                         })  
