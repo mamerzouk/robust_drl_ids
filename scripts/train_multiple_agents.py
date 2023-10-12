@@ -122,9 +122,9 @@ if __name__=='__main__':
                    model=model, device=device, seed=seed)
 
         # Training
-        print('Training...')
+        print('Training started...')
         agent.learn(testing_env, n_envs=nb_proc, save_dir=output_dir, num_epoch=epochs)
-        print('Training done')
+        print('Training done.')
 
         ####----Adversarial Attack----####
 
@@ -133,7 +133,7 @@ if __name__=='__main__':
                                        input_shape=test_set.shape[1], nb_classes=nb_class)
 
         for epsilon in epsilon_range:
-
+            print("Epsilon = {}".format(epsilon))
             print("FGSM Attack...")
             fgm = FastGradientMethod(classifier,
                                          norm=np.inf,
@@ -188,13 +188,16 @@ if __name__=='__main__':
             #else:
             #    print_stats(testing_env.attack_types, test_labels, adversarial_actions)
         del agent
+        del pytorch_model
+        del classifier
         #del vectorized_training_env
 
         print('Attack done.')
         wandb.finish()
+
     # Saving model and evaluation metrics
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    #if not os.path.exists(output_dir):
+    #    os.makedirs(output_dir)
     
     #agent.save(output_dir + '/last_model.zip')
     #test_fpr.tofile(output_dir+'/test_fpr.np')
