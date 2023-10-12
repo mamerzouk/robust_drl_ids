@@ -117,7 +117,7 @@ class CustomIDSEnv(gym.Env):
     self.observation_space = gym.spaces.Box(low=np.array(self.X.min(axis=0)), high=np.array(self.X.max(axis=0))) #shape is inferred from low and high
 
   
-  def reset(self):
+  def reset(self, *, seed=0):
     #Initialize timestep, done, monitoring helpers
     self.num_step = 0
     self.done= False 
@@ -135,7 +135,10 @@ class CustomIDSEnv(gym.Env):
     # Get state from index
     self.state = np.array(self.X.iloc[idx], dtype='float32')
 
-    return self.state
+    # info ?
+    info = {}
+
+    return self.state, info
 
   def step(self, action : int) ->  Tuple[np.array, float, bool, dict]:
     '''
@@ -167,8 +170,9 @@ class CustomIDSEnv(gym.Env):
 
     # info ?
     info = {}
+    truncated = False
 
-    return self.state, reward, self.done, info
+    return self.state, reward, self.done, truncated, info
   
   def render(self, mode='human'):
     '''

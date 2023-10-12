@@ -66,7 +66,8 @@ if __name__=='__main__':
 
     testing_env = make_testing_env(dataset, binary=binary)() 
     training_env= make_training_env(dataset, binary=binary)()
-    obs_shape = testing_env.reset().shape
+    obs, _ = testing_env.reset()
+    obs_shape = obs.shape
 
     test_set=np.array(testing_env.X, dtype='float32')
     train_set=np.array(training_env.X, dtype='float32')
