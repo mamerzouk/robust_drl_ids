@@ -77,7 +77,7 @@ if __name__=='__main__':
 
     test_set=np.array(testing_env.X, dtype='float32')
     train_set=np.array(training_env.X, dtype='float32')
-    dict_attack=dict((testing_env.attack_types[i], i) for i in range(len(testing_env.attack_types)))
+    dict_attack=dict((testing_env.unwrapped.attack_types[i], i) for i in range(len(testing_env.unwrapped.attack_types)))
     test_labels=testing_env.y.replace(dict_attack)
     train_labels=training_env.y.replace(dict_attack)
     if binary:

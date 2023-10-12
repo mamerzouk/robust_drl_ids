@@ -69,12 +69,12 @@ if __name__=='__main__':
     obs, _ = testing_env.reset()
     obs_shape = obs.shape
 
-    test_set=np.array(testing_env.X, dtype='float32')
-    train_set=np.array(training_env.X, dtype='float32')
-    dict_attack=dict((testing_env.attack_types[i], i) for i in range(len(testing_env.attack_types)))
-    test_labels=testing_env.y.replace(dict_attack)
-    train_labels=training_env.y.replace(dict_attack)
-    nb_class = len(testing_env.attack_types)
+    test_set=np.array(testing_env.unwrapped.X, dtype='float32')
+    train_set=np.array(training_env.unwrapped.X, dtype='float32')
+    dict_attack=dict((testing_env.unwrapped.attack_types[i], i) for i in range(len(testing_env.unwrapped.attack_types)))
+    test_labels=testing_env.unwrapped.y.replace(dict_attack)
+    train_labels=training_env.unwrapped.y.replace(dict_attack)
+    nb_class = len(testing_env.unwrapped.attack_types)
     if binary:
         test_labels = np.sign(test_labels)
         train_labels = np.sign(train_labels)
@@ -190,7 +190,7 @@ if __name__=='__main__':
             #if binary : 
             #    print_stats(['Normal', 'Attack'], test_labels, adversarial_actions)
             #else:
-            #    print_stats(testing_env.attack_types, test_labels, adversarial_actions)
+            #    print_stats(testing_env.unwrapped.attack_types, test_labels, adversarial_actions)
         del agent
         del pytorch_model
         del classifier
