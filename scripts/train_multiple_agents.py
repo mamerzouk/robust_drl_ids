@@ -36,6 +36,7 @@ if __name__=='__main__':
     parser.add_argument("-p", "--nb_proc", default=4, type=int, help="Number of vectorized environments for training")
     parser.add_argument("-n", "--nb_agents", default=1, type=int, help="Number of agents trained in the loop")
     parser.add_argument("-b", "--binary", default=1, type=int, help="Binary classification (1) or multi-class (0)")
+    parser.add_argument("-s", "--seed", default=0, type=int, help="Seed")
     args = parser.parse_args()
 
     dataset= args.data
@@ -46,12 +47,12 @@ if __name__=='__main__':
     nb_proc = args.nb_proc # Number of vectorized environments, to accelerate training
     nb_agents = args.nb_agents
     binary = args.binary
+    seed = args.seed
     verbose = False
     epsilon_range=[0., 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
 
     # Workspace config parameters
     device_name = 'cpu' 
-    seed = 0
 
     # Logging parameters
     log_dir = "../logs"
