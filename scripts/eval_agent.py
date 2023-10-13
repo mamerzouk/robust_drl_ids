@@ -24,7 +24,7 @@ if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data", required=True, default="KDD", help="Dataset to use: 'KDD' or 'AWID'.")
-    parser.add_argument("-m", "--model", required=True, default="DQN", help="RL algorithm: 'DQN' or 'PPO'.")
+    parser.add_argument("-m", "--model", required=True, default="DQN", help="RL algorithm: 'DQN', 'PPO', 'A2C'.")
     parser.add_argument("-l", "--layers", required=True, default=1, type=int, help="Number of hidden layers in the policy.")
     parser.add_argument("-u", "--units", required=True, default=64, type=int, help="Number of units in each layer of the policy. If -1, then the network is composed with layers of increasing size.")
     parser.add_argument("-b", "--binary", default=1, type=int, help="Binary classification (True) or multi-class (False)")

@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from stable_baselines3 import PPO, DQN
+from stable_baselines3 import PPO, DQN, A2C
 
 from ids_env.common.utils import PPO_Model
 from ids_env.common.callback import CustomWandbCallback
@@ -29,7 +29,7 @@ class Agent(nn.Module):
             number of units in each layer. If 'custom', then the number of units starts at 64 in the first 
             layer and doubles at each layer.
         -model: str
-            Name of the wanted sb3 model ('DQN' or 'PPO' for now).
+            Name of the wanted sb3 model ('DQN', 'PPO', 'A2C').
         '''
         super().__init__()
         self.obs_shape = obs_shape
@@ -48,7 +48,10 @@ class Agent(nn.Module):
                              exploration_final_eps=0.1, policy_kwargs=policy_kwargs, seed=seed, device=device)
         elif model == 'PPO':
             self.model = PPO("MlpPolicy", env, learning_rate=.00025, n_steps=512, batch_size=128, n_epochs=10,
-                             gamma=0.001, policy_kwargs=policy_kwargs, verbose=1, seed=seed, device=device)
+                             gamma=0.001, policy_kwargs=policy_kwargs, verbose=2, seed=seed, device=device)
+        elif model == 'A2C':
+            self.model = A2C("MlpPolicy", env, learning_rate=.00025, n_steps=512,
+                             gamma=0.001, policy_kwargs=policy_kwargs, verbose=2, seed=seed, device=device)
         else:
             raise(ValueError("Model unknown"))
         
@@ -60,6 +63,8 @@ class Agent(nn.Module):
             self.model = DQN.load(path)
         elif self.model_name=='PPO':
             self.model = PPO.load(path)
+        elif self.model_name=='A2C':
+            self.model = A2C.load(path)
         else:
             raise(ValueError("model unknown"))
 
@@ -132,7 +137,7 @@ class Agent(nn.Module):
         '''
         if self.model_name=='DQN':
             pytorch_model = nn.Sequential(self.model.q_net, nn.Softmax(dim=1))
-        elif self.model_name=='PPO':
+        elif self.model_name=='PPO' or self.model_name=='A2C':
             pytorch_model = PPO_Model(self.model.policy.mlp_extractor, self.model.policy.action_net)
         else:
             raise(ValueError("Model unknown"))
