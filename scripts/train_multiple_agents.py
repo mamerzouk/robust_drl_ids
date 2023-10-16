@@ -206,6 +206,7 @@ if __name__=='__main__':
 
         print("[{:4.0f}m] Attack done.".format((time.time()-start_time)/60))
         wandb.finish()
+    print("Experiment completed.")
 
     # Saving model and evaluation metrics
     #if not os.path.exists(output_dir):
