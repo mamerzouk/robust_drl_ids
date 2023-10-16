@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 
 from stable_baselines3 import PPO, DQN, A2C
-from sb3_contrib import TRPO
+from sb3_contrib import TRPO, QRDQN
 
 from ids_env.common.utils import PPO_Model
 from ids_env.common.callback import CustomWandbCallback
@@ -30,7 +30,7 @@ class Agent(nn.Module):
             number of units in each layer. If 'custom', then the number of units starts at 64 in the first 
             layer and doubles at each layer.
         -model: str
-            Name of the wanted sb3 model ('DQN', 'PPO', 'A2C', 'TRPO').
+            Name of the wanted sb3 model ('DQN', 'PPO', 'A2C', 'TRPO', 'QRDQN').
         '''
         super().__init__()
         self.obs_shape = obs_shape
@@ -47,6 +47,10 @@ class Agent(nn.Module):
             self.model = DQN("MlpPolicy", env, learning_rate=.00025, buffer_size=10000, learning_starts=10, 
                              batch_size=128, gamma=0.001, target_update_interval=250, verbose=2, 
                              exploration_final_eps=0.1, policy_kwargs=policy_kwargs, seed=seed, device=device)
+        elif model=='QRDQN':
+            self.model = QRDQN("MlpPolicy", env, learning_rate=.00025, buffer_size=10000, learning_starts=10, 
+                             batch_size=128, gamma=0.001, target_update_interval=250, verbose=2, 
+                             exploration_final_eps=0.1, policy_kwargs=policy_kwargs, seed=seed, device=device)   
         elif model=='TRPO':
             self.model = TRPO("MlpPolicy", env, learning_rate=.00025, n_steps=512, batch_size=128, gamma=0.001,
                               verbose=2, policy_kwargs=policy_kwargs, seed=seed, device=device)
@@ -65,6 +69,8 @@ class Agent(nn.Module):
     def load(self, path):
         if self.model_name=='DQN':
             self.model = DQN.load(path)
+        elif self.model_name=='QRDQN':
+            self.model = QRDQN.load(path)
         elif self.model_name=='PPO':
             self.model = PPO.load(path)
         elif self.model_name=='A2C':
@@ -143,6 +149,8 @@ class Agent(nn.Module):
         '''
         if self.model_name=='DQN':
             pytorch_model = nn.Sequential(self.model.q_net, nn.Softmax(dim=1))
+        elif self.model_name=='QRDQN':
+            pytorch_model = nn.Sequential(self.model.quantile_net.quantile_net , nn.Softmax(dim=1))
         elif self.model_name=='PPO' or self.model_name=='A2C' or self.model_name=='TRPO' :
             pytorch_model = PPO_Model(self.model.policy.mlp_extractor, self.model.policy.action_net)
         else:

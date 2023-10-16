@@ -18,7 +18,7 @@ if __name__=='__main__':
     ####----Parameters----####
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data", required=True, default="KDD", help="Dataset to use: 'KDD' or 'AWID'.")
-    parser.add_argument("-m", "--model", required=True, default="DQN", help="RL algorithm: 'DQN', 'PPO', 'A2C', 'TRPO.")
+    parser.add_argument("-m", "--model", required=True, default="DQN", help="RL algorithm: 'DQN', 'PPO', 'A2C', 'TRPO', 'QRDQN.")
     parser.add_argument("-l", "--layers", required=True, default=1, type=int, help="Number of hidden layers in the policy.")
     parser.add_argument("-u", "--units", required=True, default=64, type=int, help="Number of units in each layer of the policy. If -1, then the network is composed with layers of increasing size.")
     parser.add_argument("-e", "--epochs", required=True, default=10, type=int, help="Number of epochs to train the agent.")

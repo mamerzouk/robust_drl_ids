@@ -29,7 +29,7 @@ if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data", required=True, default="KDD", help="Dataset to use: 'KDD' or 'AWID'.")
-    parser.add_argument("-m", "--model", required=True, default="DQN", help="RL algorithm: 'DQN', 'PPO', 'A2C', 'TRPO'.")
+    parser.add_argument("-m", "--model", required=True, default="DQN", help="RL algorithm: 'DQN', 'PPO', 'A2C', 'TRPO', 'QRDQN'.")
     parser.add_argument("-l", "--layers", required=True, default=1, type=int, help="Number of hidden layers in the policy.")
     parser.add_argument("-u", "--units", required=True, default=64, type=int, help="Number of units in each layer of the policy. If -1, then the network is composed with layers of increasing size.")
     parser.add_argument("-e", "--epochs", required=True, default=10, type=int, help="Number of epochs to train the agent.")
@@ -145,7 +145,14 @@ if __name__=='__main__':
                                          num_random_init=0,
                                          batch_size=128,
                                          )
-            adversarial_examples = fgm.generate(x=test_set, y=np.hstack((np.ones((test_set.shape[0], 1)), np.zeros((test_set.shape[0], nb_class-1)))).astype('float32'))# we assume the normal class is the first column
+            
+            y_target = np.hstack((np.ones((test_set.shape[0], 1)), np.zeros((test_set.shape[0], nb_class-1)))).astype('float32') # we assume the normal class is the first column
+            if model=='QRDQN':
+                #reshape y_target according to the number of quantiles in QRDQN check:
+                #https://github.com/Stable-Baselines-Team/stable-baselines3-contrib/blob/master/sb3_contrib/qrdqn/policies.py
+                y_target = np.tile(y_target, (1, 200))
+                
+            adversarial_examples = fgm.generate(x=test_set, y=y_target)
             adversarial_actions = agent.model.predict(adversarial_examples, deterministic=True)[0]
             fpr, fnr = calcul_rates(test_labels, adversarial_actions)
             if binary:
@@ -171,7 +178,7 @@ if __name__=='__main__':
                                            targeted=True, 
                                            batch_size=128)
             
-            adversarial_examples = bim.generate(x=test_set, y=np.hstack((np.ones((test_set.shape[0], 1)), np.zeros((test_set.shape[0], nb_class-1)))).astype('float32'))# we assume the normal class is the first column
+            adversarial_examples = bim.generate(x=test_set, y=y_target)
             adversarial_actions = agent.model.predict(adversarial_examples, deterministic=True)[0]
             fpr, fnr = calcul_rates(test_labels, adversarial_actions)
             if binary:
