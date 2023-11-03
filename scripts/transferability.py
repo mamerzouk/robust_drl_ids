@@ -188,7 +188,8 @@ if __name__=='__main__':
                                            eps_step=eps_step,
                                            max_iter=max_iter, 
                                            targeted=True, 
-                                           batch_size=128)
+                                           batch_size=128,
+                                           verbose=False)
             
             adversarial_examples = bim.generate(x=test_set, y=y_target)
             adversarial_actions = dagent.model.predict(adversarial_examples, deterministic=True)[0]
