@@ -17,6 +17,9 @@ kdd_test_path = "../datasets/KDD/formated_KDD_test.parquet"
 unswnb15_train_path = "../datasets/UNSW-NB15/formated_UNSWNB15_train.parquet"
 unswnb15_test_path = "../datasets/UNSW-NB15/formated_UNSWNB15_test.parquet"
 
+ciciov2024_train_path = "../datasets/CICIoV2024/formated_CICIoV2024_train.parquet"
+ciciov2024_test_path = "../datasets/CICIoV2024/formated_CICIoV2024_test.parquet"
+
 
 
 def make_training_env(dataset: str = "KDD", binary=False) -> Callable:
@@ -33,6 +36,8 @@ def make_training_env(dataset: str = "KDD", binary=False) -> Callable:
             train_path = kdd_train_path
         elif dataset == "UNSW-NB15" :
             train_path = unswnb15_train_path
+        elif dataset == "CICIoV2024":
+            train_path = ciciov2024_train_path
         else : 
             raise ValueError("Unknown Dataset")
 
@@ -55,6 +60,8 @@ def make_testing_env(dataset: str = "KDD", binary=False) -> Callable:
             test_path = kdd_test_path
         elif dataset == "UNSW-NB15" : 
             test_path = unswnb15_test_path
+        elif dataset == "CICIoV2024":
+            test_path = ciciov2024_test_path
         else : 
             raise ValueError("Unknown Dataset")
 

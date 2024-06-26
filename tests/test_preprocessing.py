@@ -6,7 +6,7 @@ import sys
 path_root = Path(__file__).parents[1]
 sys.path.append(str(path_root))
 
-from preprocessing import FormatKDD, FormatAWID, FormatUNSWNB15
+from preprocessing import FormatKDD, FormatAWID, FormatUNSWNB15, FormatCICIoV2024
 
 if __name__ == '__main__':
 
@@ -29,6 +29,7 @@ if __name__ == '__main__':
     raw_train_path_AWID = '../datasets/AWID/AWID-CLS-R-Trn.csv'
     raw_train_path_UNSWNB15 = '../datasets/UNSW-NB15/UNSW_NB15_training-set.csv'
     raw_test_path_UNSWNB15 = '../datasets/UNSW-NB15/UNSW_NB15_testing-set.csv'
+    raw_data_path_CICIoV2024 = '../datasets/CICIoV2024'
 
     if save : 
         if dataset=='KDD':
@@ -52,6 +53,15 @@ if __name__ == '__main__':
             means.to_csv('../datasets/UNSW-NB15/means_UNSWNB15.csv', sep=',', index=True)
             stds.to_csv('../datasets/UNSW-NB15/stds_UNSWNB15.csv', sep=',', index=True)
 
+        elif dataset=='CICIoV2024':
+            formated_train_CICIoV2024, formated_test_CICIoV2024, means, stds = FormatCICIoV2024(raw_data_path=raw_data_path_CICIoV2024, split=0.7)
+            formated_train_CICIoV2024.to_parquet('../datasets/CICIoV2024/formated_CICIoV2024_train.parquet',index=False)
+            formated_test_CICIoV2024.to_parquet('../datasets/CICIoV2024/formated_CICIoV2024_test.parquet',index=False)
+            means.to_csv('../datasets/CICIoV2024/means_CICIoV2024.csv', sep=',', index=True)
+            stds.to_csv('../datasets/CICIoV2024/stds_CICIoV2024.csv', sep=',', index=True)
+
+
+
         else:
             raise ValueError("Unknown dataset. Received {}, should be 'KDD' or 'AWID'".format(dataset))
     
@@ -66,7 +76,10 @@ if __name__ == '__main__':
 
     elif dataset=='UNSW-NB15':
         train_df = pd.read_parquet('../datasets/UNSW-NB15/formated_UNSWNB15_train.parquet')
-        test_df = pd.read_parquet('../datasets/UNSW-NB15/formated_UNSWNB15_test.parquet')    
+        test_df = pd.read_parquet('../datasets/UNSW-NB15/formated_UNSWNB15_test.parquet')
+    elif dataset=='CICIoV2024':
+        train_df = pd.read_parquet('../datasets/CICIoV2024/formated_CICIoV2024_train.parquet')
+        test_df = pd.read_parquet('../datasets/CICIoV2024/formated_CICIoV2024_test.parquet')
     
     if verbose:
 
